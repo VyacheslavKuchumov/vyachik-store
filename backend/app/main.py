@@ -14,8 +14,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Vyachik's Store Backend", lifespan=lifespan)
 
-# Подключаем роутер к главному приложению.
-# Это похоже на подключение плагина.
+# Регистрируем роутеры
 app.include_router(user.router)
 
 
