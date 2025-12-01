@@ -1,10 +1,13 @@
 # app/routers/user.py
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database import get_db # Импортируем наш асинхронный генератор
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
+from pwdlib import PasswordHash
+from jwt.exceptions import InvalidTokenError
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -14,18 +17,15 @@ async def create_user(
     # FastAPI сам вызовет get_db, дождется сессии и передаст её сюда
     db: AsyncSession = Depends(get_db) 
 ):
-    # Хешируем пароль (в реальном проекте используйте Bcrypt!)
-    fake_hashed_password = f"secret_hash_{user.password}" 
-
-    db_user = User(email=user.email, username=user.username, hashed_password=fake_hashed_password)
+    
+    password_hash = PasswordHash.recommended().hash(user.password)
+    db_user = User(email=user.email, username=user.username, hashed_password=password_hash)
     
     # Добавляем в сессию (здесь await не нужен, это операция в памяти)
     db.add(db_user)
-    
-    # А вот здесь мы "отпускаем" управление, пока база сохраняет данные.
-    # В это время сервер может обрабатывать запросы других пользователей!
+
+    # Фиксируем изменения в базе данных
     await db.commit()
-    
     # Обновляем объект данными из базы (например, получаем присвоенный ID)
     await db.refresh(db_user)
     
