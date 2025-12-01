@@ -19,7 +19,7 @@ async def create_user(
 ):
     
     password_hash = PasswordHash.recommended().hash(user.password)
-    db_user = User(email=user.email, username=user.username, hashed_password=password_hash)
+    db_user = User(email=user.email, username=user.username, password_hash=password_hash)
     
     # Добавляем в сессию (здесь await не нужен, это операция в памяти)
     db.add(db_user)
