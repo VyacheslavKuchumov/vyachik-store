@@ -1,7 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from fastapi.security import OAuth2PasswordBearer
 
 class Settings(BaseSettings):
-    DATABASE_URL: str
+    DATABASE_URL: str = "sqlite+aiosqlite:///./sql_app.db"
     DEBUG: bool = False
     ADMIN_EMAIL: str = "admin@mail.ru"
     ADMIN_USERNAME: str = "admin"
@@ -11,6 +12,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "UNSECURE_SECRET_KEY_CHANGE_ME"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    OAUTH2_SCHEME: OAuth2PasswordBearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
     model_config = SettingsConfigDict(env_file=".env")

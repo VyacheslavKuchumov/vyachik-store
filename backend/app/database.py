@@ -1,13 +1,13 @@
 # app/database.py
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
+from app.config import Settings
 
-# Важно: используем префикс sqlite+aiosqlite для асинхронной работы
-SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./sql_app.db"
 
+db_url = Settings().DATABASE_URL
 # 1. Создаем асинхронный движок (Async Engine)
 engine = create_async_engine(
-    SQLALCHEMY_DATABASE_URL, 
+    db_url, 
     connect_args={"check_same_thread": False} # Нужно только для SQLite
 )
 

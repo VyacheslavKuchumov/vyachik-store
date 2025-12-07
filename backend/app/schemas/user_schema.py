@@ -5,10 +5,23 @@ from pydantic import BaseModel, EmailStr
 class UserBase(BaseModel):
     email: EmailStr
     username: str
+    
+# Схема для регистрации пользователя
+class UserSignup(UserBase):
+    password: str
 
-# Схема для СОЗДАНИЯ пользователя (Input DTO)
+# Схема для СОЗДАНИЯ пользователя через админку
 class UserCreate(UserBase):
-    password: str # Клиент шлет сырой пароль, мы его валидируем здесь
+    password: str
+    is_superuser: bool = False
+
+# Схема для ОБНОВЛЕНИЯ пользователя через админку
+class UserUpdate(BaseModel):
+    email: EmailStr | None = None
+    username: str | None = None
+    password: str | None = None
+    is_active: bool | None = None
+    is_superuser: bool | None = None
 
 # Схема для ОТВЕТА (Output DTO)
 class UserResponse(UserBase):
