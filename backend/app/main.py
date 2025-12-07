@@ -1,7 +1,7 @@
 # app/main.py
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from backend.app.routers import user_router
+from app.routers import user_router
 from app.database import Base, engine
 from fastapi.responses import RedirectResponse
 

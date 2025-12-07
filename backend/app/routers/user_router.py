@@ -4,8 +4,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database import get_db # Импортируем наш асинхронный генератор
-from backend.app.models.user_model import User
-from backend.app.schemas.user_schema import UserCreate, UserResponse
+from app.models.user_model import User
+from app.schemas.user_schema import UserCreate, UserResponse
 from pwdlib import PasswordHash
 from jwt.exceptions import InvalidTokenError
 
